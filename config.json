@@ -1,7 +1,7 @@
 {
 	"enable_combat" : true,
 	"minimum_systems" : 10,
-	"maximum_systems" : 100,
+	"maximum_systems" : 30,
 	"system_base" : {},
 	"loot" : [
 		"Metal Scrap", "Metal Scrap", "Officer Insignia",
