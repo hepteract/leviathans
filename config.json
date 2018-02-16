@@ -9,5 +9,7 @@
 	],
 	"eval_system_base" : "{}",
 	"minimum_planets" : 0,
-	"maximum_planets" : 11
+	"maximum_planets" : 11,
+	"minimum_materials" : 7,
+	"maximum_materials" : 51
 }

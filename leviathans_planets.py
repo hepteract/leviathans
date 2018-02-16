@@ -34,7 +34,7 @@ def generate_materials(num = -1):
     logging.debug('Generating materials')
     seed()
     mat = {}
-    num = num if num != -1 else random.randrange(7, 51)
+    num = num if num != -1 else random.randrange(config["minimum_materials"], config["maximum_materials"])
     for i in xrange(num):
         #_mat = name(2) + random.choice(('nite', 'inite', 'ium', 'tine'))
         _mat = element_name()
