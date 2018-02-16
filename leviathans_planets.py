@@ -12,7 +12,9 @@ import save as save_form
 import sys
 import logging
 import leviathans_world as game
-game.EVAL_SYSTEM_BASE = '{}'
+
+config = game.config
+
 if __name__ != '__main__':
     logging.debug('%s imported', __name__)
 game.cmd_list['prospect'] = 'Scan all the planets in the solar system for resources.'
@@ -66,7 +68,7 @@ class System(System):
 
     def generate_planets(self):
         self.planets = []
-        for i in xrange(random.randrange(0, 11)):
+        for i in xrange(random.randrange(config["minimum_planets"], config["maximum_planets"])):
             self.planets.append(Planet(self.world, self.name + ' ' + int_to_roman(i + 1)))
 
         return self.planets
@@ -109,10 +111,10 @@ def new_world(save = True, notify = True):
     materials = generate_materials()
     #game.LOOT += (random.choice(materials.values()), random.choice(materials.values()), random.choice(materials.values()))
     import name
-    game.SYSTEM_BASE = eval(game.EVAL_SYSTEM_BASE)
-    logging.debug(game.EVAL_SYSTEM_BASE)
+    game.config["system_base"] = eval(game.config["eval_system_base"])
+    logging.debug(game.config["eval_system_base"])
     name = name.name
-    world = game.GameWorld(start_cargo=(find_fuel(materials), random.randrange(100, 200)), systems=game.SYSTEM_BASE)
+    world = game.GameWorld(start_cargo=(find_fuel(materials), random.randrange(100, 200)), systems=game.config["system_base"])
     world.mat = materials
     world.blu = blueprints
     world.ofr = standing_offers

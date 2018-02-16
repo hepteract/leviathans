@@ -1,0 +1,13 @@
+{
+	"enable_combat" : true,
+	"minimum_systems" : 10,
+	"maximum_systems" : 100,
+	"system_base" : {},
+	"loot" : [
+		"Metal Scrap", "Metal Scrap", "Officer Insignia",
+		"Top Secret Report", "Antimatter Canister"
+	],
+	"eval_system_base" : "{}",
+	"minimum_planets" : 0,
+	"maximum_planets" : 11
+}

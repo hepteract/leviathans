@@ -1,11 +1,12 @@
 #Embedded file name: leviathans_world.pyc
-ENABLE_COMBAT = True
-MINIMUM_SYSTEMS = 10
-MAXIMUM_SYSTEMS = 100
-SYSTEM_BASE = {}
-SOUNDTRACK = 'below_the_asteroids.mp3'
-LOOT = ('Metal Scrap', 'Metal Scrap', 'Metal Scrap', 'Officer Insignia',\
-        'Top Secret Report', 'Antimatter Canister')
+#config["enable_combat"] = True
+#config["minimum_systems"] = 10
+#config["maximum_systems"] = 100
+#config["system_base"] = {}
+#SOUNDTRACK = 'below_the_asteroids.mp3'
+#config["loot"] = ('Metal Scrap', 'Metal Scrap', 'Metal Scrap', 'Officer Insignia',\
+#        'Top Secret Report', 'Antimatter Canister')
+
 from nova.hook import HookTarget
 from leviathans import ShipLayer, ShipModule, generate_crew_roster
 from progressbar import ProgressBar, AnimatedMarker
@@ -14,6 +15,11 @@ from copy import deepcopy as copy
 import cPickle as pickle
 import threading, random, name, time, sys, os
 import logging
+
+import json
+with open('config.json') as config_file:
+    config = json.load(config_file)
+
 if __name__ != '__main__':
     logging.debug('%s imported', __name__)
 
@@ -55,7 +61,7 @@ def get_help():
     print "All commands are case-insensitive, and additional text doesn't matter. For example:"
     print '"jump Hek A" is the same as "Jump into Hek A!", which is the same as "You know that system, Hek A? Jump to it."'
     print
-    if ENABLE_COMBAT == True:
+    if config["enable_combat"] == True:
         print 'In combat, you can use the following commands:'
         lb.get_help(False)
         print 'When not in combat, you can use these commands:'
@@ -263,7 +269,7 @@ def make_enemyship(world, market):
 
 class GameWorld(object):
 
-    def __init__(self, players = ['Ship()'], systems = SYSTEM_BASE, market = {}, items = {}, notify = True, start_cargo = []):
+    def __init__(self, players = ['Ship()'], systems = config["system_base"], market = {}, items = {}, notify = True, start_cargo = []):
         logging.info('Generating new world')
         if notify:
             print 'Generating new world...\n\nGenerating items...'
@@ -302,9 +308,7 @@ class GameWorld(object):
                 gates.append(gate[systemID])
 
     def generate_systems(self, notify = True):
-        global MINIMUM_SYSTEMS
-        global MAXIMUM_SYSTEMS
-        maxval = random.randrange(MINIMUM_SYSTEMS, MAXIMUM_SYSTEMS)
+        maxval = random.randrange(config["minimum_systems"], config["maximum_systems"])
         if notify:
             pbar = ProgressBar()
         else:
@@ -403,7 +407,7 @@ def replacement_simple_demo(*args, **kwargs):
     raise AttributeError, 'space combat not supported in this version of Leviathans'
 
 
-if not ENABLE_COMBAT:
+if not config["enable_combat"]:
     lb._simple_demo = replacement_simple_demo
 new_cmd = {}
 
@@ -488,7 +492,7 @@ def _play_world(world, playerid = 0):
             if ship == False:
                 raise Death
             else:
-                player.cargo.append(random.choice(LOOT))
+                player.cargo.append(random.choice(config["loot"]))
                 world.systems[player.systemID].enemy = None
                 player.layer = ship
                 print
@@ -555,32 +559,27 @@ def main():
 
 def quickgen(module = None):
     if module is None:
-        global MINIMUM_SYSTEMS
-        global MAXIMUM_SYSTEMS
-        MINIMUM_SYSTEMS = 10
-        MAXIMUM_SYSTEMS = 100
+        config["minimum_systems"] = 10
+        config["maximum_systems"] = 100
     else:
-        module.MINIMUM_SYSTEMS = 10
-        module.MAXIMUM_SYSTEMS = 100      
+        module.config["minimum_systems"] = 10
+        module.config["maximum_systems"] = 100      
 
 
 def jovian(module = None):
     if module is None:
-        global MINIMUM_SYSTEMS
-        global MAXIMUM_SYSTEMS
-        MINIMUM_SYSTEMS = 5
-        MAXIMUM_SYSTEMS = 10
+        config["minimum_systems"] = 5
+        config["maximum_systems"] = 10
     else:
-        module.MINIMUM_SYSTEMS = 5
-        module.MAXIMUM_SYSTEMS = 10
+        module.config["minimum_systems"] = 5
+        module.config["maximum_systems"] = 10
 
 
 def blackhole(module = None):
     if module is None:
-        global EVAL_SYSTEM_BASE
-        EVAL_SYSTEM_BASE = '{0 : System(game.WORLD_PROTOTYPE, 0, name.generate(sep = "", prefix = name.prefixes, body = name.sounds, bodies = random.randrange(1, 5), _terminate = random.choice(name.suffixes), suffix = name.postfix_func(" ", name.alphabetize)), (), enemy = None)}'
+        config["eval_system_base"] = '{0 : System(game.WORLD_PROTOTYPE, 0, name.generate(sep = "", prefix = name.prefixes, body = name.sounds, bodies = random.randrange(1, 5), _terminate = random.choice(name.suffixes), suffix = name.postfix_func(" ", name.alphabetize)), (), enemy = None)}'
     else:
-        module.EVAL_SYSTEM_BASE = '{0 : System(game.WORLD_PROTOTYPE, 0, name.generate(sep = "", prefix = name.prefixes, body = name.sounds, bodies = random.randrange(1, 5), _terminate = random.choice(name.suffixes), suffix = name.postfix_func(" ", name.alphabetize)), (), enemy = None)}'
+        module.config["eval_system_base"] = '{0 : System(game.WORLD_PROTOTYPE, 0, name.generate(sep = "", prefix = name.prefixes, body = name.sounds, bodies = random.randrange(1, 5), _terminate = random.choice(name.suffixes), suffix = name.postfix_func(" ", name.alphabetize)), (), enemy = None)}'
 
 if __name__ == '__main__':
     jovian()
