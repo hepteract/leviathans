@@ -4,6 +4,7 @@ world.dat
 cargo
 planets
 *.log
+*.swp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
